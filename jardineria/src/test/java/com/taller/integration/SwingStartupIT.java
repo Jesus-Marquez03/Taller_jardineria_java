@@ -45,6 +45,12 @@ class SwingStartupIT {
                     .filter(button -> NAVIGATION_LABELS.contains(button.getText()))
                     .toList();
             assertEquals(NAVIGATION_LABELS.size(), navigation.size());
+            for (JButton button : navigation) {
+                assertNotNull(button.getIcon());
+                assertEquals(16, button.getIcon().getIconWidth());
+                assertEquals(16, button.getIcon().getIconHeight());
+                assertEquals(9, button.getIconTextGap());
+            }
 
             JPanel cardPanel = findCardPanel(window.getContentPane());
             assertNotNull(cardPanel);

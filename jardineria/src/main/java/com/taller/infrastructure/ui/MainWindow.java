@@ -5,7 +5,6 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.swing.BorderFactory;
@@ -62,21 +61,21 @@ public class MainWindow extends JFrame {
         menu.add(Box.createVerticalStrut(20));
 
         addGroup(menu, "Inicio");
-        addButton(menu, "Dashboard", "inicio");
+        addButton(menu, "Dashboard", "inicio", MenuIcons.Type.DASHBOARD);
 
         addGroup(menu, "Gestión comercial");
-        addButton(menu, "Clientes", "clientes");
-        addButton(menu, "Pedidos", "pedidos");
-        addButton(menu, "Detalles de pedido", "detalles");
-        addButton(menu, "Pagos", "pagos");
+        addButton(menu, "Clientes", "clientes", MenuIcons.Type.CLIENTES);
+        addButton(menu, "Pedidos", "pedidos", MenuIcons.Type.PEDIDOS);
+        addButton(menu, "Detalles de pedido", "detalles", MenuIcons.Type.DETALLES);
+        addButton(menu, "Pagos", "pagos", MenuIcons.Type.PAGOS);
 
         addGroup(menu, "Catálogo e inventario");
-        addButton(menu, "Productos", "productos");
-        addButton(menu, "Gamas de producto", "gamas");
+        addButton(menu, "Productos", "productos", MenuIcons.Type.PRODUCTOS);
+        addButton(menu, "Gamas de producto", "gamas", MenuIcons.Type.GAMAS);
 
         addGroup(menu, "Organización");
-        addButton(menu, "Oficinas", "oficinas");
-        addButton(menu, "Empleados", "empleados");
+        addButton(menu, "Oficinas", "oficinas", MenuIcons.Type.OFICINAS);
+        addButton(menu, "Empleados", "empleados", MenuIcons.Type.EMPLEADOS);
 
         menu.add(Box.createVerticalGlue());
         JLabel footer = new JLabel("Sistema de gestión");
@@ -102,7 +101,7 @@ public class MainWindow extends JFrame {
 
         JLabel title = new JLabel("JARDINERÍA");
         title.setForeground(Theme.VERDE_OSCURO);
-        title.setFont(new Font("SansSerif", Font.BOLD, 23));
+        title.setFont(Theme.MARCA);
         title.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         JLabel subtitle = new JLabel("Cultivamos organización");
@@ -119,14 +118,16 @@ public class MainWindow extends JFrame {
     private void addGroup(JPanel menu, String text) {
         JLabel label = new JLabel(text.toUpperCase());
         label.setForeground(Theme.MARRON);
-        label.setFont(new Font("SansSerif", Font.BOLD, 11));
+        label.setFont(Theme.GRUPO_MENU);
         label.setBorder(BorderFactory.createEmptyBorder(14, 8, 6, 0));
         label.setAlignmentX(Component.LEFT_ALIGNMENT);
         menu.add(label);
     }
 
-    private void addButton(JPanel menu, String text, String card) {
+    private void addButton(JPanel menu, String text, String card, MenuIcons.Type iconType) {
         JButton button = new JButton(text);
+        button.setIcon(MenuIcons.create(iconType));
+        button.setIconTextGap(9);
         Theme.styleNavigationButton(button);
         button.setAlignmentX(Component.LEFT_ALIGNMENT);
         button.addActionListener(event -> showCard(card));

@@ -5,9 +5,11 @@ import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GraphicsEnvironment;
 import java.awt.Insets;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Arrays;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JTable;
@@ -15,6 +17,7 @@ import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.plaf.basic.BasicButtonUI;
 import javax.swing.plaf.basic.BasicLabelUI;
+import javax.swing.plaf.FontUIResource;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
 
@@ -39,13 +42,24 @@ final class Theme {
     static final Color DESACTIVADO = new Color(0xD8D1C5);
     static final Color TEXTO_DESACTIVADO = new Color(0x625D56);
 
-    static final Font TITULO = new Font("SansSerif", Font.BOLD, 25);
-    static final Font SUBTITULO = new Font("SansSerif", Font.PLAIN, 13);
-    static final Font SECCION = new Font("SansSerif", Font.BOLD, 16);
-    static final Font TEXTO_NORMAL = new Font("SansSerif", Font.PLAIN, 13);
-    static final Font BOTON = new Font("SansSerif", Font.BOLD, 13);
+    static final String FONT_FAMILY = selectFontFamily();
+    static final Font MARCA = font(Font.BOLD, 24);
+    static final Font TITULO = font(Font.BOLD, 21);
+    static final Font TARJETA = font(Font.BOLD, 14);
+    static final Font VALOR_INDICADOR = font(Font.BOLD, 24);
+    static final Font BOTON = font(Font.BOLD, 14);
+    static final Font TEXTO_NORMAL = font(Font.PLAIN, 13);
+    static final Font TABLA = font(Font.PLAIN, 13);
+    static final Font TABLA_ENCABEZADO = font(Font.BOLD, 13);
+    static final Font SECCION = font(Font.BOLD, 14);
+    static final Font SUBTITULO = font(Font.PLAIN, 12);
+    static final Font TEXTO_PEQUENO = font(Font.PLAIN, 12);
+    static final Font GRUPO_MENU = font(Font.BOLD, 11);
+    static final Font SPLASH_TITULO = font(Font.BOLD, 29);
+    static final Font SPLASH_SUBTITULO = font(Font.PLAIN, 15);
 
     static {
+        configureGlobalFonts();
         // Evita que el sistema operativo vuelva invisible el texto desactivado.
         UIManager.put("Button.disabledText", TEXTO_DESACTIVADO);
         UIManager.put("Button.background", VERDE_OSCURO);
@@ -56,12 +70,56 @@ final class Theme {
         UIManager.put("Table.selectionForeground", TEXTO);
         UIManager.put("TableHeader.background", VERDE_OSCURO);
         UIManager.put("TableHeader.foreground", Color.WHITE);
-        UIManager.put("TableHeader.font", BOTON);
+        UIManager.put("TableHeader.font", TABLA_ENCABEZADO);
         UIManager.put("OptionPane.background", FONDO);
         UIManager.put("Panel.background", FONDO);
     }
 
     private Theme() {
+    }
+
+    private static String selectFontFamily() {
+        String[] available = GraphicsEnvironment.getLocalGraphicsEnvironment()
+                .getAvailableFontFamilyNames();
+        for (String preferred : new String[]{"Trebuchet MS", "Segoe UI", "SansSerif"}) {
+            if (Arrays.stream(available).anyMatch(name -> name.equalsIgnoreCase(preferred))) {
+                return preferred;
+            }
+        }
+        return Font.SANS_SERIF;
+    }
+
+    private static Font font(int style, int size) {
+        return new Font(FONT_FAMILY, style, size);
+    }
+
+    private static void configureGlobalFonts() {
+        FontUIResource normal = new FontUIResource(TEXTO_NORMAL);
+        FontUIResource button = new FontUIResource(BOTON);
+        FontUIResource table = new FontUIResource(TABLA);
+        FontUIResource tableHeader = new FontUIResource(TABLA_ENCABEZADO);
+
+        String[] normalComponents = {
+                "Label.font", "ComboBox.font", "TextField.font", "PasswordField.font",
+                "FormattedTextField.font", "TextArea.font", "TextPane.font",
+                "EditorPane.font", "List.font", "ToolTip.font", "ProgressBar.font",
+                "OptionPane.messageFont", "TitledBorder.font"
+        };
+        for (String key : normalComponents) {
+            UIManager.put(key, normal);
+        }
+
+        String[] buttonComponents = {
+                "Button.font", "ToggleButton.font", "CheckBox.font", "RadioButton.font",
+                "Menu.font", "MenuItem.font", "CheckBoxMenuItem.font",
+                "RadioButtonMenuItem.font", "OptionPane.buttonFont"
+        };
+        for (String key : buttonComponents) {
+            UIManager.put(key, button);
+        }
+
+        UIManager.put("Table.font", table);
+        UIManager.put("TableHeader.font", tableHeader);
     }
 
     static void styleActionButton(JButton button, Color background, Color hover) {
@@ -117,7 +175,7 @@ final class Theme {
     }
 
     static void styleTable(JTable table) {
-        table.setFont(TEXTO_NORMAL);
+        table.setFont(TABLA);
         table.setForeground(TEXTO);
         table.setBackground(SUPERFICIE);
         table.setSelectionBackground(CORAL_CLARO);
@@ -127,7 +185,7 @@ final class Theme {
         table.setShowVerticalLines(false);
         table.setFillsViewportHeight(true);
         JTableHeader header = table.getTableHeader();
-        header.setFont(BOTON);
+        header.setFont(TABLA_ENCABEZADO);
         header.setBackground(VERDE_OSCURO);
         header.setForeground(Color.WHITE);
         header.setOpaque(true);
@@ -153,7 +211,7 @@ final class Theme {
                                                         int row, int column) {
             super.getTableCellRendererComponent(table, value, selected, focused, row, column);
             setText(value == null ? "" : value.toString());
-            setFont(BOTON);
+            setFont(TABLA_ENCABEZADO);
             setBackground(VERDE_OSCURO);
             setForeground(Color.WHITE);
             return this;
