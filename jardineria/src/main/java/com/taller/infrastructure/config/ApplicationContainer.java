@@ -13,6 +13,7 @@ public final class ApplicationContainer {
     private final PedidoService pedidoService;
     private final DetallePedidoService detallePedidoService;
     private final PagoService pagoService;
+    private final DashboardService dashboardService;
 
     public ApplicationContainer(DatabaseConfig config) {
         var oficinas = new OficinaJdbcRepository(config);
@@ -23,6 +24,7 @@ public final class ApplicationContainer {
         var pedidos = new PedidoJdbcRepository(config);
         var detalles = new DetallePedidoJdbcRepository(config);
         var pagos = new PagoJdbcRepository(config);
+        var dashboard = new DashboardJdbcRepository(config);
 
         oficinaService = new OficinaService(oficinas);
         empleadoService = new EmpleadoService(empleados, oficinas);
@@ -32,6 +34,7 @@ public final class ApplicationContainer {
         pedidoService = new PedidoService(pedidos, clientes);
         detallePedidoService = new DetallePedidoService(detalles, pedidos, productos);
         pagoService = new PagoService(pagos, clientes);
+        dashboardService = new DashboardService(dashboard);
     }
 
     public OficinaService oficinas() { return oficinaService; }
@@ -42,4 +45,5 @@ public final class ApplicationContainer {
     public PedidoService pedidos() { return pedidoService; }
     public DetallePedidoService detalles() { return detallePedidoService; }
     public PagoService pagos() { return pagoService; }
+    public DashboardService dashboard() { return dashboardService; }
 }
