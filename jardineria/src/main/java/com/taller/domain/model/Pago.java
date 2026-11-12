@@ -1,0 +1,32 @@
+package com.taller.domain.model;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
+public class Pago {
+    private Integer codigoCliente;
+    private String formaPago;
+    private String idTransaccion;
+    private LocalDate fechaPago;
+    private BigDecimal total;
+
+    public Pago(Integer codigoCliente, String formaPago, String idTransaccion, LocalDate fechaPago, BigDecimal total) {
+        setCodigoCliente(codigoCliente);
+        setFormaPago(formaPago);
+        setIdTransaccion(idTransaccion);
+        setFechaPago(fechaPago);
+        setTotal(total);
+    }
+
+    public PagoId getId() { return new PagoId(codigoCliente, idTransaccion); }
+    public Integer getCodigoCliente() { return codigoCliente; }
+    public void setCodigoCliente(Integer codigoCliente) { this.codigoCliente = Validaciones.enteroPositivo(codigoCliente == null ? 0 : codigoCliente, "El codigo del cliente"); }
+    public String getFormaPago() { return formaPago; }
+    public void setFormaPago(String formaPago) { this.formaPago = Validaciones.textoRequerido(formaPago, "La forma de pago"); }
+    public String getIdTransaccion() { return idTransaccion; }
+    public void setIdTransaccion(String idTransaccion) { this.idTransaccion = Validaciones.textoRequerido(idTransaccion, "El identificador de transaccion"); }
+    public LocalDate getFechaPago() { return fechaPago; }
+    public void setFechaPago(LocalDate fechaPago) { if (fechaPago == null) throw new IllegalArgumentException("La fecha de pago es obligatoria."); this.fechaPago = fechaPago; }
+    public BigDecimal getTotal() { return total; }
+    public void setTotal(BigDecimal total) { this.total = Validaciones.decimalNoNegativo(total, "El total", false); }
+}
