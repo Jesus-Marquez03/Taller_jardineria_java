@@ -4,6 +4,7 @@ import com.taller.infrastructure.config.ApplicationContainer;
 import com.taller.infrastructure.config.DatabaseConfig;
 import com.taller.infrastructure.ui.MainWindow;
 import java.awt.CardLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.GraphicsEnvironment;
@@ -12,11 +13,14 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
@@ -48,6 +52,22 @@ class SwingStartupIT {
                 SwingUtilities.invokeAndWait(button::doClick);
                 assertTrue(button.isOpaque());
                 assertEquals(1, visibleComponents(cardPanel));
+            }
+
+            List<JTable> tables = findTables(window.getContentPane());
+            assertEquals(9, tables.size()); // Ocho CRUD y la tabla del Dashboard.
+            for (JTable table : tables) {
+                assertTrue(table.getColumnCount() > 0);
+                for (int column = 0; column < table.getColumnCount(); column++) {
+                    var component = table.getTableHeader().getDefaultRenderer()
+                            .getTableCellRendererComponent(table, table.getColumnName(column),
+                                    false, false, -1, column);
+                    assertTrue(component instanceof JLabel);
+                    JLabel label = (JLabel) component;
+                    assertFalse(label.getText().isBlank());
+                    assertEquals(new Color(0x2F4639), label.getBackground());
+                    assertEquals(Color.WHITE, label.getForeground());
+                }
             }
         } finally {
             SwingUtilities.invokeAndWait(reference.get()::dispose);
@@ -81,6 +101,19 @@ class SwingStartupIT {
             }
         }
         return null;
+    }
+
+    private List<JTable> findTables(Container container) {
+        List<JTable> tables = new ArrayList<>();
+        for (Component component : container.getComponents()) {
+            if (component instanceof JTable table) {
+                tables.add(table);
+            }
+            if (component instanceof Container child) {
+                tables.addAll(findTables(child));
+            }
+        }
+        return tables;
     }
 
     private long visibleComponents(Container container) {

@@ -3,8 +3,10 @@ package com.taller.infrastructure.ui;
 import java.awt.Color;
 import java.awt.event.MouseEvent;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
+import javax.swing.table.DefaultTableModel;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -42,12 +44,26 @@ class ThemeTest {
             assertEquals(Theme.CORAL, navigation.getBackground());
             assertEquals(Theme.TEXTO, navigation.getForeground());
 
-            JTable table = new JTable(1, 1);
+            JTable table = new JTable(new DefaultTableModel(
+                    new Object[][]{{1, "Planta"}}, new String[]{"Código", "Nombre"}));
             Theme.styleTable(table);
             assertEquals(Theme.CORAL_CLARO, table.getSelectionBackground());
             assertEquals(Theme.TEXTO, table.getSelectionForeground());
             assertEquals(Theme.VERDE_OSCURO, table.getTableHeader().getBackground());
             assertEquals(Color.WHITE, table.getTableHeader().getForeground());
+            assertEquals(36, table.getTableHeader().getPreferredSize().height);
+
+            for (int column = 0; column < table.getColumnCount(); column++) {
+                var renderer = table.getTableHeader().getDefaultRenderer();
+                var component = renderer.getTableCellRendererComponent(table,
+                        table.getColumnName(column), false, false, -1, column);
+                assertTrue(component instanceof JLabel);
+                JLabel label = (JLabel) component;
+                assertEquals(table.getColumnName(column), label.getText());
+                assertEquals(Theme.VERDE_OSCURO, label.getBackground());
+                assertEquals(Color.WHITE, label.getForeground());
+                assertTrue(label.isOpaque());
+            }
         });
     }
 

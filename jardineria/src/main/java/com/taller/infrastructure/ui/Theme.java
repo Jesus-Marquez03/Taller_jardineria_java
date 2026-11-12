@@ -1,7 +1,9 @@
 package com.taller.infrastructure.ui;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.MouseAdapter;
@@ -9,8 +11,12 @@ import java.awt.event.MouseEvent;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.plaf.basic.BasicButtonUI;
+import javax.swing.plaf.basic.BasicLabelUI;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.JTableHeader;
 
 /** Paleta y estilos sencillos compartidos por todas las pantallas Swing. */
 final class Theme {
@@ -48,6 +54,9 @@ final class Theme {
         UIManager.put("Button.font", BOTON);
         UIManager.put("Table.selectionBackground", CORAL_CLARO);
         UIManager.put("Table.selectionForeground", TEXTO);
+        UIManager.put("TableHeader.background", VERDE_OSCURO);
+        UIManager.put("TableHeader.foreground", Color.WHITE);
+        UIManager.put("TableHeader.font", BOTON);
         UIManager.put("OptionPane.background", FONDO);
         UIManager.put("Panel.background", FONDO);
     }
@@ -117,11 +126,38 @@ final class Theme {
         table.setRowHeight(30);
         table.setShowVerticalLines(false);
         table.setFillsViewportHeight(true);
-        table.getTableHeader().setFont(BOTON);
-        table.getTableHeader().setBackground(VERDE_OSCURO);
-        table.getTableHeader().setForeground(Color.WHITE);
-        table.getTableHeader().setOpaque(true);
-        table.getTableHeader().setReorderingAllowed(false);
+        JTableHeader header = table.getTableHeader();
+        header.setFont(BOTON);
+        header.setBackground(VERDE_OSCURO);
+        header.setForeground(Color.WHITE);
+        header.setOpaque(true);
+        header.setReorderingAllowed(false);
+        header.setDefaultRenderer(new HeaderRenderer());
+        header.setPreferredSize(new Dimension(header.getPreferredSize().width, 36));
+    }
+
+    /** Evita que el renderer nativo de Windows ignore el fondo del encabezado. */
+    private static final class HeaderRenderer extends DefaultTableCellRenderer {
+        private HeaderRenderer() {
+            setUI(new BasicLabelUI());
+            setOpaque(true);
+            setHorizontalAlignment(SwingConstants.CENTER);
+            setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createMatteBorder(0, 0, 1, 1, new Color(0x6F8175)),
+                    BorderFactory.createEmptyBorder(0, 8, 0, 8)));
+        }
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value,
+                                                        boolean selected, boolean focused,
+                                                        int row, int column) {
+            super.getTableCellRendererComponent(table, value, selected, focused, row, column);
+            setText(value == null ? "" : value.toString());
+            setFont(BOTON);
+            setBackground(VERDE_OSCURO);
+            setForeground(Color.WHITE);
+            return this;
+        }
     }
 
     private static void prepareButton(JButton button) {
