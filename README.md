@@ -51,6 +51,9 @@ Taller_jardineria_java/
         │   │       ├── config/
         │   │       ├── persistence/
         │   │       └── ui/
+        │   │           ├── Theme.java
+        │   │           ├── SplashScreen.java
+        │   │           └── componentes Swing
         │   └── resources/application.properties.example
         └── test/java/com/taller/
 ```
@@ -175,6 +178,12 @@ Si `mvn` no está en `PATH`, agregue la carpeta `bin` de Maven o invoque su `mvn
 - Mensajes claros para errores de negocio, integridad y conexión.
 - Consulta de inventario y alerta de stock menor o igual a 10.
 - Dashboard actualizable sin bloquear el hilo visual.
+- Tema visual cálido y legible centralizado para menús, formularios y tablas.
+- Pantalla de bienvenida animada antes de abrir la ventana principal.
+
+### Pantalla de bienvenida
+
+Al ejecutar la aplicación aparece un `JWindow` centrado con el nombre del sistema, un brote dibujado con Java 2D y una barra de progreso. La animación utiliza `javax.swing.Timer`, mientras que la inicialización se realiza con `SwingWorker` para no bloquear el hilo visual. Cuando la conexión y el Dashboard están preparados, la pantalla se cierra y se muestra la ventana principal; si ocurre un error, se presenta un mensaje claro.
 
 ### Dashboard
 
@@ -200,8 +209,9 @@ Cuando productos o pagos están vacíos, muestra cero y el mensaje correspondien
 - `feature/interfaz-swing`
 - `feature/dashboard`
 - `feature/documentacion-pruebas`
+- `feature/redisenio-interfaz`
 
-Los commits posteriores a `first commit` usan Conventional Commits con Gitmojis. Las ramas feature se integran mediante merge sin reescribir el historial.
+Los commits posteriores a `first commit` usan Conventional Commits con Gitmojis. Las ramas feature se integran mediante merge sin reescribir el historial. Las ocho entidades se desarrollaron conjuntamente en las ramas de dominio, persistencia, servicios e interfaz porque comparten esas capas; no se crearon ramas artificiales por entidad después de terminar el código.
 
 ## Limitaciones conocidas
 
