@@ -5,7 +5,6 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.swing.BorderFactory;
@@ -102,7 +101,7 @@ public class MainWindow extends JFrame {
 
         JLabel title = new JLabel("JARDINERÍA");
         title.setForeground(Theme.VERDE_OSCURO);
-        title.setFont(new Font("SansSerif", Font.BOLD, 23));
+        title.setFont(Theme.MARCA);
         title.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         JLabel subtitle = new JLabel("Cultivamos organización");
@@ -119,7 +118,7 @@ public class MainWindow extends JFrame {
     private void addGroup(JPanel menu, String text) {
         JLabel label = new JLabel(text.toUpperCase());
         label.setForeground(Theme.MARRON);
-        label.setFont(new Font("SansSerif", Font.BOLD, 11));
+        label.setFont(Theme.GRUPO_MENU);
         label.setBorder(BorderFactory.createEmptyBorder(14, 8, 6, 0));
         label.setAlignmentX(Component.LEFT_ALIGNMENT);
         menu.add(label);

@@ -6,7 +6,6 @@ import com.taller.domain.model.Pedido;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
@@ -189,11 +188,11 @@ public class InicioPanel extends JPanel {
             setPreferredSize(new Dimension(145, 112));
 
             JLabel name = new JLabel(title);
-            name.setFont(Theme.BOTON);
+            name.setFont(Theme.TARJETA);
             name.setForeground(Theme.TEXTO);
-            value.setFont(new Font("SansSerif", Font.BOLD, 25));
+            value.setFont(Theme.VALOR_INDICADOR);
             value.setForeground(Theme.VERDE_OSCURO);
-            note.setFont(new Font("SansSerif", Font.PLAIN, 11));
+            note.setFont(Theme.TEXTO_PEQUENO);
             note.setForeground(Theme.TEXTO_SECUNDARIO);
 
             add(name);
