@@ -1,11 +1,15 @@
 package com.taller.infrastructure.ui;
 
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.GraphicsEnvironment;
 import java.awt.event.MouseEvent;
+import java.util.Arrays;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 import org.junit.jupiter.api.Test;
 
@@ -73,6 +77,28 @@ class ThemeTest {
         assertTrue(contrast(Color.WHITE, Theme.VERDE_OSCURO) >= 4.5);
         assertTrue(contrast(Color.WHITE, Theme.MARRON) >= 4.5);
         assertTrue(contrast(Theme.TEXTO, Theme.FONDO) >= 4.5);
+    }
+
+    @Test
+    void tipografiaUsaLaPrimeraFamiliaDisponibleYRespetaLosTamanos() {
+        String[] available = GraphicsEnvironment.getLocalGraphicsEnvironment()
+                .getAvailableFontFamilyNames();
+        String expected = Arrays.stream(new String[]{"Trebuchet MS", "Segoe UI", "SansSerif"})
+                .filter(preferred -> Arrays.stream(available)
+                        .anyMatch(name -> name.equalsIgnoreCase(preferred)))
+                .findFirst()
+                .orElse(Font.SANS_SERIF);
+
+        assertEquals(expected, Theme.FONT_FAMILY);
+        assertEquals(24, Theme.MARCA.getSize());
+        assertEquals(21, Theme.TITULO.getSize());
+        assertEquals(14, Theme.BOTON.getSize());
+        assertEquals(13, Theme.TABLA.getSize());
+        assertEquals(13, Theme.TABLA_ENCABEZADO.getSize());
+        assertEquals(Font.BOLD, Theme.TABLA_ENCABEZADO.getStyle());
+        assertEquals(Theme.FONT_FAMILY, UIManager.getFont("Label.font").getFamily());
+        assertEquals(Theme.FONT_FAMILY, UIManager.getFont("OptionPane.messageFont").getFamily());
+        assertEquals(Theme.FONT_FAMILY, UIManager.getFont("OptionPane.buttonFont").getFamily());
     }
 
     private double contrast(Color first, Color second) {

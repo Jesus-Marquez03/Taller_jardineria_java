@@ -4,7 +4,6 @@ import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -78,12 +77,12 @@ public class SplashScreen extends JWindow {
         content.add(plantPanel, BorderLayout.NORTH);
 
         JLabel title = new JLabel("JARDINERÍA", SwingConstants.CENTER);
-        title.setFont(new Font("SansSerif", Font.BOLD, 29));
+        title.setFont(Theme.SPLASH_TITULO);
         title.setForeground(Theme.VERDE_OSCURO);
         title.setAlignmentX(CENTER_ALIGNMENT);
 
         JLabel subtitle = new JLabel("Cultivamos organización", SwingConstants.CENTER);
-        subtitle.setFont(new Font("SansSerif", Font.PLAIN, 15));
+        subtitle.setFont(Theme.SPLASH_SUBTITULO);
         subtitle.setForeground(Theme.MARRON);
         subtitle.setAlignmentX(CENTER_ALIGNMENT);
 
