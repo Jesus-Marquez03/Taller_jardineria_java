@@ -1,0 +1,7 @@
+# Alternativa local a las variables de entorno.
+# Copia como application.properties; este archivo real esta ignorado por Git.
+db.host=localhost
+db.port=3306
+db.name=jardineria
+db.user=jardineria_app
+db.password=cambia_esta_contrasena
