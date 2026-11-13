@@ -7,8 +7,16 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
-/** Centraliza la configuracion sin mantener una conexion abierta. */
+/**
+ * Centraliza los datos necesarios para conectarse con MySQL.
+ *
+ * <p>Es infraestructura porque utiliza JDBC y detalles externos. Aplica
+ * Singleton: existe una sola configuración accesible con {@link #getInstance()},
+ * pero no conserva una única conexión abierta. Cada repositorio solicita una
+ * {@link Connection} nueva y la cierra mediante try-with-resources.</p>
+ */
 public final class DatabaseConfig {
+    /** Instancia única creada por la propia clase. */
     private static final DatabaseConfig INSTANCE = new DatabaseConfig();
 
     private final Properties properties = new Properties();
@@ -16,6 +24,10 @@ public final class DatabaseConfig {
     private final String user;
     private final String password;
 
+    /**
+     * Constructor privado del Singleton. Lee primero variables de entorno,
+     * después propiedades locales y finalmente valores de desarrollo.
+     */
     private DatabaseConfig() {
         cargarPropiedadesLocales();
         String host = valor("DB_HOST", "db.host", "localhost");
@@ -28,10 +40,16 @@ public final class DatabaseConfig {
         this.password = valor("DB_PASSWORD", "db.password", "");
     }
 
+    /** @return la única configuración compartida por la aplicación */
     public static DatabaseConfig getInstance() {
         return INSTANCE;
     }
 
+    /**
+     * Abre una conexión JDBC nueva mediante {@link DriverManager}.
+     * @return conexión que el llamador debe cerrar
+     * @throws SQLException si MySQL no está disponible o la configuración falla
+     */
     public Connection getConnection() throws SQLException {
         try {
             return DriverManager.getConnection(url, user, password);
@@ -42,6 +60,10 @@ public final class DatabaseConfig {
         }
     }
 
+    /**
+     * Abre y cierra una conexión corta para comprobar disponibilidad.
+     * @return {@code true} cuando MySQL responde dentro de tres segundos
+     */
     public boolean probarConexion() {
         try (Connection connection = getConnection()) {
             return connection.isValid(3);
@@ -54,6 +76,7 @@ public final class DatabaseConfig {
         return url;
     }
 
+    /** Carga application.properties cuando existe; el archivo real no se versiona. */
     private void cargarPropiedadesLocales() {
         try (InputStream input = DatabaseConfig.class.getResourceAsStream("/application.properties")) {
             if (input != null) {
@@ -64,6 +87,7 @@ public final class DatabaseConfig {
         }
     }
 
+    /** Resuelve un valor respetando el orden entorno, archivo y predeterminado. */
     private String valor(String variableEntorno, String propiedad, String predeterminado) {
         String desdeEntorno = System.getenv(variableEntorno);
         if (desdeEntorno != null && !desdeEntorno.isBlank()) {

@@ -1,5 +1,13 @@
 package com.taller.domain.model;
 
+/**
+ * Representa una oficina física de la empresa de jardinería.
+ *
+ * <p>Sus atributos privados guardan la ubicación y los datos de contacto. Esta
+ * clase pertenece al dominio: describe el negocio, pero no conoce JDBC, MySQL
+ * ni Swing. Los getters permiten leer el estado del objeto y los setters lo
+ * modifican de forma controlada, lo que demuestra encapsulamiento.</p>
+ */
 public class Oficina {
     private String codigoOficina;
     private String ciudad;
@@ -10,6 +18,11 @@ public class Oficina {
     private String lineaDireccion1;
     private String lineaDireccion2;
 
+    /**
+     * Construye una oficina y pasa los campos obligatorios por sus setters para
+     * que el objeto nunca nazca con datos inválidos. Región y segunda dirección
+     * pueden ser {@code null} porque la tabla permite esos valores opcionales.
+     */
     public Oficina(String codigoOficina, String ciudad, String pais, String region,
                    String codigoPostal, String telefono, String lineaDireccion1, String lineaDireccion2) {
         setCodigoOficina(codigoOficina);
