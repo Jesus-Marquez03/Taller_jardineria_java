@@ -11,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
+/** Verifica en el EDT que el Splash termine, ejecute su acción y se cierre. */
 class SplashScreenTest {
     @Test
     void animacionTerminaYCierraLaVentana() throws Exception {

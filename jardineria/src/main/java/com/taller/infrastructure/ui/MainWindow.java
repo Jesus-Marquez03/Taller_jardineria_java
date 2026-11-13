@@ -18,11 +18,20 @@ import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.WindowConstants;
 
+/**
+ * Ventana principal de la aplicación y punto central de navegación.
+ *
+ * <p>Extiende {@link JFrame}, la ventana superior de Swing. El menú lateral
+ * contiene {@link JButton} y el centro usa {@link CardLayout}: todas las
+ * pantallas existen en el mismo lugar, pero solo una tarjeta está visible. La
+ * clase recibe servicios ya construidos mediante {@link ApplicationContainer}.</p>
+ */
 public class MainWindow extends JFrame {
     private final CardLayout cards = new CardLayout();
     private final JPanel content = new JPanel(cards);
     private final Map<String, JButton> navigationButtons = new LinkedHashMap<>();
 
+    /** Configura tamaño, paneles y primera tarjeta visible. */
     public MainWindow(ApplicationContainer container) {
         super("Jardinería - Sistema de gestión");
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -38,6 +47,7 @@ public class MainWindow extends JFrame {
         showCard("inicio");
     }
 
+    /** Crea Dashboard y ocho paneles CRUD y les asigna un nombre de navegación. */
     private void configureCards(ApplicationContainer container) {
         content.setBackground(Theme.FONDO);
         content.add(new InicioPanel(container.dashboard()), "inicio");
@@ -51,6 +61,10 @@ public class MainWindow extends JFrame {
         content.add(CrudPanelsFactory.empleados(container), "empleados");
     }
 
+    /**
+     * Construye el menú vertical dentro de JScrollPane para pantallas pequeñas.
+     * BoxLayout coloca sus elementos uno debajo del otro.
+     */
     private JScrollPane createSideMenu() {
         JPanel menu = new JPanel();
         menu.setBackground(Theme.FONDO);
@@ -124,6 +138,7 @@ public class MainWindow extends JFrame {
         menu.add(label);
     }
 
+    /** Crea un botón, le asigna icono y registra su ActionListener de navegación. */
     private void addButton(JPanel menu, String text, String card, MenuIcons.Type iconType) {
         JButton button = new JButton(text);
         button.setIcon(MenuIcons.create(iconType));
@@ -136,6 +151,7 @@ public class MainWindow extends JFrame {
         menu.add(Box.createVerticalStrut(3));
     }
 
+    /** Muestra una tarjeta y actualiza cuál botón aparece seleccionado. */
     private void showCard(String card) {
         cards.show(content, card);
         navigationButtons.forEach((name, button) ->

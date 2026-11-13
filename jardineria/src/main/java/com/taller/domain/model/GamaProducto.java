@@ -1,11 +1,18 @@
 package com.taller.domain.model;
 
+/**
+ * Representa una categoría o gama que agrupa productos semejantes.
+ *
+ * <p>Es una entidad de dominio independiente de la base de datos. La gama es
+ * su clave primaria; las descripciones y la imagen son información opcional.</p>
+ */
 public class GamaProducto {
     private String gama;
     private String descripcionTexto;
     private String descripcionHtml;
     private String imagen;
 
+    /** Crea la gama y exige que su identificador tenga texto. */
     public GamaProducto(String gama, String descripcionTexto, String descripcionHtml, String imagen) {
         setGama(gama);
         this.descripcionTexto = descripcionTexto;

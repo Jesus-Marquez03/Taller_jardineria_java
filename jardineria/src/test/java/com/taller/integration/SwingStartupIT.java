@@ -25,6 +25,10 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
+/**
+ * Prueba de integración visual que construye MainWindow, navega sus tarjetas y
+ * comprueba íconos, tablas y renderers sin modificar información.
+ */
 class SwingStartupIT {
     private static final Set<String> NAVIGATION_LABELS = Set.of(
             "Dashboard", "Clientes", "Pedidos", "Detalles de pedido", "Pagos",

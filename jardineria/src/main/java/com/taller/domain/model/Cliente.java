@@ -2,6 +2,15 @@ package com.taller.domain.model;
 
 import java.math.BigDecimal;
 
+/**
+ * Representa un cliente que puede realizar pedidos y pagos.
+ *
+ * <p>Es una entidad de dominio. Mantiene datos de contacto y una referencia
+ * opcional al empleado representante de ventas. {@link BigDecimal} se usa para
+ * el límite de crédito porque evita los errores de precisión de {@code double}
+ * en cantidades monetarias. Los campos permitidos como NULL en MySQL se
+ * representan con referencias Java que pueden valer {@code null}.</p>
+ */
 public class Cliente {
     private Integer codigoCliente;
     private String nombreCliente;
@@ -18,6 +27,10 @@ public class Cliente {
     private Integer codigoEmpleadoRepVentas;
     private BigDecimal limiteCredito;
 
+    /**
+     * Crea un cliente completo. Los setters comprueban los datos obligatorios y
+     * que el límite de crédito, cuando exista, no sea negativo.
+     */
     public Cliente(Integer codigoCliente, String nombreCliente, String nombreContacto, String apellidoContacto,
                    String telefono, String fax, String lineaDireccion1, String lineaDireccion2, String ciudad,
                    String region, String pais, String codigoPostal, Integer codigoEmpleadoRepVentas,

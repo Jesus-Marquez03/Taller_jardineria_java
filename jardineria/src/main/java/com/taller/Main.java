@@ -9,11 +9,24 @@ import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 
+/**
+ * Punto de entrada de la aplicación de escritorio.
+ *
+ * <p>Su responsabilidad es preparar Swing, mostrar el Splash Screen, comprobar
+ * MySQL y construir las dependencias. No contiene reglas del negocio. Separa el
+ * trabajo lento en un {@link SwingWorker} para no bloquear el Event Dispatch
+ * Thread (EDT), que es el hilo encargado de dibujar y responder a los botones.</p>
+ */
 public class Main {
+    /**
+     * Inicia Swing en su hilo seguro mediante {@code invokeLater}.
+     * @param args argumentos de consola; esta aplicación no necesita ninguno
+     */
     public static void main(String[] args) {
         SwingUtilities.invokeLater(Main::startApplication);
     }
 
+    /** Coordina la pantalla de bienvenida y la carga real de la aplicación. */
     private static void startApplication() {
         configureLookAndFeel();
         SplashScreen splash = new SplashScreen();
@@ -22,6 +35,7 @@ public class Main {
         new SwingWorker<ApplicationContainer, Void>() {
             @Override
             protected ApplicationContainer doInBackground() {
+                // Este bloque corre fuera del EDT porque conectarse y consultar puede tardar.
                 DatabaseConfig config = DatabaseConfig.getInstance();
                 if (!config.probarConexion()) {
                     throw new IllegalStateException(
@@ -36,6 +50,7 @@ public class Main {
 
             @Override
             protected void done() {
+                // done() vuelve al EDT: aquí ya es seguro crear y mostrar componentes Swing.
                 try {
                     ApplicationContainer container = get();
                     MainWindow window = new MainWindow(container);
@@ -54,6 +69,7 @@ public class Main {
         }.execute();
     }
 
+    /** Intenta adoptar la apariencia del sistema operativo sin hacerla obligatoria. */
     private static void configureLookAndFeel() {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());

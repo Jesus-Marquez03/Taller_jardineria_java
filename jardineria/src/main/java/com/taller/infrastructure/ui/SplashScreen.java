@@ -19,7 +19,14 @@ import javax.swing.SwingConstants;
 import javax.swing.Timer;
 import javax.swing.plaf.basic.BasicProgressBarUI;
 
-/** Pantalla breve de bienvenida mientras se prepara la aplicación. */
+/**
+ * Pantalla breve de bienvenida mientras se prepara la aplicación.
+ *
+ * <p>Extiende JWindow porque no necesita barra de título. Un {@link Timer}
+ * avanza la animación en eventos cortos del EDT, nunca con Thread.sleep(). El
+ * trabajo lento ocurre en el SwingWorker de Main; cuando termina, Main llama a
+ * {@link #finish(Runnable)} y el Splash abre la ventana principal.</p>
+ */
 public class SplashScreen extends JWindow {
     private static final int MAX_PROGRESS = 100;
     private static final int WAITING_PROGRESS = 90;
@@ -33,6 +40,7 @@ public class SplashScreen extends JWindow {
     private boolean initializationComplete;
     private Runnable completionAction;
 
+    /** Construye componentes y Timer, pero aún no muestra la ventana. */
     public SplashScreen() {
         setSize(520, 340);
         setLocationRelativeTo(null);
@@ -42,6 +50,7 @@ public class SplashScreen extends JWindow {
         animationTimer.setCoalesce(true);
     }
 
+    /** Reinicia valores, muestra el JWindow e inicia los pulsos del Timer. */
     public void start() {
         progress = 0;
         initializationComplete = false;
@@ -52,12 +61,17 @@ public class SplashScreen extends JWindow {
         animationTimer.start();
     }
 
+    /**
+     * Indica que la inicialización real terminó y guarda la acción siguiente.
+     * @param afterClose normalmente, mostrar MainWindow
+     */
     public void finish(Runnable afterClose) {
         completionAction = afterClose;
         initializationComplete = true;
         status.setText("Preparando ventana principal...");
     }
 
+    /** Detiene el Timer, informa el error y cierra la pantalla para no quedar cargando. */
     public void showError(String message) {
         animationTimer.stop();
         status.setText("No se pudo iniciar el sistema");
@@ -111,6 +125,7 @@ public class SplashScreen extends JWindow {
         return content;
     }
 
+    /** Avanza progreso y planta; espera en 90% si MySQL todavía no está listo. */
     private void advanceAnimation() {
         if (!initializationComplete && progress >= WAITING_PROGRESS) {
             status.setText("Cargando información inicial...");
@@ -143,6 +158,7 @@ public class SplashScreen extends JWindow {
         }
     }
 
+    /** JPanel que usa Java 2D para dibujar una planta según el porcentaje. */
     private static class PlantPanel extends JPanel {
         private int progress;
 

@@ -31,16 +31,26 @@ import javax.swing.WindowConstants;
 import javax.swing.border.CompoundBorder;
 import javax.swing.text.JTextComponent;
 
+/**
+ * Ayudante para construir formularios Swing consistentes.
+ *
+ * <p>GridBagLayout alinea etiquetas y campos en dos columnas. El mapa relaciona
+ * una clave interna con cada componente para leerlo después. Esta clase solo
+ * convierte texto del formulario a tipos Java; las reglas del negocio siguen
+ * en entidades y servicios.</p>
+ */
 final class FormBuilder {
     private final JPanel panel = new JPanel(new GridBagLayout());
     private final Map<String, JComponent> fields = new LinkedHashMap<>();
     private int row;
 
+    /** Prepara el panel que contendrá las filas del formulario. */
     FormBuilder() {
         panel.setBorder(BorderFactory.createEmptyBorder(16, 18, 16, 18));
         panel.setBackground(Theme.FONDO);
     }
 
+    /** Agrega un JTextField de una línea y lo registra por clave. */
     JTextField text(String key, String label, Object value) {
         JTextField field = new JTextField(value == null ? "" : String.valueOf(value), 28);
         styleTextComponent(field);
@@ -48,6 +58,7 @@ final class FormBuilder {
         return field;
     }
 
+    /** Agrega un área multilínea dentro de JScrollPane. */
     JTextArea area(String key, String label, String value) {
         JTextArea field = new JTextArea(value == null ? "" : value, 4, 28);
         field.setLineWrap(true);
@@ -62,6 +73,10 @@ final class FormBuilder {
         return field;
     }
 
+    /**
+     * Crea un JComboBox para elegir claves foráneas sin escribirlas a mano.
+     * @param nullable permite una opción {@code null} para relaciones opcionales
+     */
     <T> JComboBox<T> combo(String key, String label, List<T> values,
                            T selected, boolean nullable) {
         DefaultComboBoxModel<T> model = new DefaultComboBoxModel<>();
@@ -157,6 +172,11 @@ final class FormBuilder {
         return (T) ((JComboBox<?>) fields.get(key)).getSelectedItem();
     }
 
+    /**
+     * Muestra un JDialog modal y construye la entidad al presionar Guardar.
+     * Si el usuario cancela, devuelve {@code null}; los errores de conversión se
+     * muestran sin cerrar el formulario.
+     */
     <T> T show(String title, Supplier<T> constructor) {
         AtomicReference<T> result = new AtomicReference<>();
         Window owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
@@ -204,6 +224,7 @@ final class FormBuilder {
         return result.get();
     }
 
+    /** Aplica de forma común colores, selección, caret y borde a campos de texto. */
     private void styleTextComponent(JTextComponent component) {
         component.setFont(Theme.TEXTO_NORMAL);
         component.setForeground(Theme.TEXTO);
@@ -221,6 +242,7 @@ final class FormBuilder {
         addComponent(label, field);
     }
 
+    /** Coloca etiqueta y control en la siguiente fila de GridBagLayout. */
     private void addComponent(String label, JComponent component) {
         JLabel fieldLabel = new JLabel(label);
         fieldLabel.setFont(Theme.BOTON);

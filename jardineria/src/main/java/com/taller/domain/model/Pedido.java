@@ -2,6 +2,14 @@ package com.taller.domain.model;
 
 import java.time.LocalDate;
 
+/**
+ * Representa un pedido realizado por un cliente.
+ *
+ * <p>Usa {@link LocalDate} porque las columnas guardan fechas sin hora. La
+ * fecha de entrega puede ser {@code null} mientras el pedido no se entregue.
+ * Esta entidad valida presencia y formato básico; {@code PedidoService}
+ * compara el orden lógico de las fechas y comprueba que el cliente exista.</p>
+ */
 public class Pedido {
     private Integer codigoPedido;
     private LocalDate fechaPedido;
@@ -11,6 +19,7 @@ public class Pedido {
     private String comentarios;
     private Integer codigoCliente;
 
+    /** Crea el pedido y valida los campos básicos mediante sus setters. */
     public Pedido(Integer codigoPedido, LocalDate fechaPedido, LocalDate fechaEsperada, LocalDate fechaEntrega,
                   String estado, String comentarios, Integer codigoCliente) {
         setCodigoPedido(codigoPedido);

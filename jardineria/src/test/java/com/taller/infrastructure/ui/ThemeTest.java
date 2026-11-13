@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/** Pruebas unitarias de contraste, estados, encabezados y tipografía visual. */
 class ThemeTest {
     @Test
     void botonCoralMantieneTextoLegibleEnTodosSusEstados() throws Exception {

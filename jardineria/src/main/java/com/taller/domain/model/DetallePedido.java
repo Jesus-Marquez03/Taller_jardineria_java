@@ -2,6 +2,14 @@ package com.taller.domain.model;
 
 import java.math.BigDecimal;
 
+/**
+ * Representa una línea de un pedido: qué producto se pidió, cuánto y a qué precio.
+ *
+ * <p>La pareja {@code codigoPedido + codigoProducto} forma su clave primaria
+ * compuesta y se expresa con {@link DetallePedidoId}. El precio usa
+ * {@link BigDecimal}. El servicio comprueba las claves foráneas y que la
+ * cantidad no supere el stock disponible.</p>
+ */
 public class DetallePedido {
     private Integer codigoPedido;
     private String codigoProducto;
@@ -9,6 +17,7 @@ public class DetallePedido {
     private BigDecimal precioUnidad;
     private int numeroLinea;
 
+    /** Crea una línea y exige cantidad, precio y número de línea válidos. */
     public DetallePedido(Integer codigoPedido, String codigoProducto, int cantidad,
                          BigDecimal precioUnidad, int numeroLinea) {
         setCodigoPedido(codigoPedido);
@@ -18,6 +27,10 @@ public class DetallePedido {
         setNumeroLinea(numeroLinea);
     }
 
+    /**
+     * Agrupa las dos partes de la clave para buscar, actualizar o eliminar la línea.
+     * @return identificador compuesto inmutable del detalle
+     */
     public DetallePedidoId getId() { return new DetallePedidoId(codigoPedido, codigoProducto); }
     public Integer getCodigoPedido() { return codigoPedido; }
     public void setCodigoPedido(Integer codigoPedido) { this.codigoPedido = Validaciones.enteroPositivo(codigoPedido == null ? 0 : codigoPedido, "El codigo del pedido"); }

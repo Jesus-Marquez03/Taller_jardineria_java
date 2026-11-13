@@ -21,7 +21,14 @@ import javax.swing.plaf.FontUIResource;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
 
-/** Paleta y estilos sencillos compartidos por todas las pantallas Swing. */
+/**
+ * Centraliza colores, fuentes y estilos compartidos por Swing.
+ *
+ * <p>Es una clase auxiliar de infraestructura visual: no se instancia y no
+ * contiene negocio. UIManager cambia valores predeterminados de los componentes;
+ * los métodos restantes aplican estados normal, hover, seleccionado y desactivado.
+ * Centralizar evita repetir configuraciones en cada pantalla.</p>
+ */
 final class Theme {
     static final Color FONDO = new Color(0xF7F1E6);
     static final Color PANEL = new Color(0xE8DFCE);
@@ -78,6 +85,7 @@ final class Theme {
     private Theme() {
     }
 
+    /** Elige Trebuchet MS y usa alternativas cuando no está instalada. */
     private static String selectFontFamily() {
         String[] available = GraphicsEnvironment.getLocalGraphicsEnvironment()
                 .getAvailableFontFamilyNames();
@@ -93,6 +101,7 @@ final class Theme {
         return new Font(FONT_FAMILY, style, size);
     }
 
+    /** Registra tipografías comunes en UIManager para componentes y diálogos. */
     private static void configureGlobalFonts() {
         FontUIResource normal = new FontUIResource(TEXTO_NORMAL);
         FontUIResource button = new FontUIResource(BOTON);
@@ -126,6 +135,10 @@ final class Theme {
         styleActionButton(button, background, hover, Color.WHITE);
     }
 
+    /**
+     * Aplica estilo y MouseListener a un botón de acción.
+     * @param foreground color del texto que se conservará en sus estados activos
+     */
     static void styleActionButton(JButton button, Color background, Color hover,
                                   Color foreground) {
         prepareButton(button);
@@ -148,6 +161,7 @@ final class Theme {
         button.addPropertyChangeListener("enabled", event -> updateActionButton(button, false));
     }
 
+    /** Prepara un botón del menú lateral y su reacción al paso del cursor. */
     static void styleNavigationButton(JButton button) {
         prepareButton(button);
         button.setHorizontalAlignment(JButton.LEFT);
@@ -169,11 +183,16 @@ final class Theme {
         button.addPropertyChangeListener("enabled", event -> updateNavigationButton(button, false));
     }
 
+    /** Marca el módulo activo y vuelve a calcular colores del botón. */
     static void setNavigationSelected(JButton button, boolean selected) {
         button.putClientProperty("selectedNavigation", selected);
         updateNavigationButton(button, false);
     }
 
+    /**
+     * Aplica colores, filas y encabezado a JTable.
+     * El renderer explícito evita que el Look & Feel de Windows oculte el texto.
+     */
     static void styleTable(JTable table) {
         table.setFont(TABLA);
         table.setForeground(TEXTO);
@@ -245,6 +264,7 @@ final class Theme {
         button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     }
 
+    /** Decide colores según prioridad: desactivado, seleccionado, hover o normal. */
     private static void updateNavigationButton(JButton button, boolean hovered) {
         if (!button.isEnabled()) {
             button.setBackground(DESACTIVADO);

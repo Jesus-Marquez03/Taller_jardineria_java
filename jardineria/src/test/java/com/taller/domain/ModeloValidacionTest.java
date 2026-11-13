@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+/** Pruebas unitarias que comprueban reglas básicas sin conectarse a MySQL. */
 class ModeloValidacionTest {
     @Test
     void productoNoPermiteStockNegativo() {

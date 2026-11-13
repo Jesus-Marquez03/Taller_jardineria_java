@@ -11,6 +11,10 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * Prueba de integración que recorre CRUD real de las ocho entidades en MySQL.
+ * Usa identificadores aleatorios y elimina únicamente sus datos temporales.
+ */
 class JdbcIntegrationIT {
     @Test
     void crudDeLasOchoEntidadesRespetaRelaciones() {
@@ -27,6 +31,7 @@ class JdbcIntegrationIT {
         PagoId pagoId = new PagoId(clienteId, "TX-" + suffix);
 
         try {
+            // Se crean primero los registros padres para cumplir las claves foráneas.
             Oficina oficina = new Oficina(oficinaId, "Ciudad prueba", "Colombia", null,
                     "110111", "5550000", "Direccion temporal", null);
             app.oficinas().guardar(oficina);
@@ -73,6 +78,7 @@ class JdbcIntegrationIT {
             assertEquals(new BigDecimal("76.50"), app.pagos().buscarPorId(pagoId).orElseThrow().getTotal());
             assertTrue(app.dashboard().obtenerResumen().totalProductos() >= 1);
         } finally {
+            // Se limpia en orden inverso: primero hijos y luego padres.
             app.pagos().buscarPorId(pagoId).ifPresent(x -> app.pagos().eliminar(pagoId));
             app.detalles().buscarPorId(detalleId).ifPresent(x -> app.detalles().eliminar(detalleId));
             app.pedidos().buscarPorId(pedidoId).ifPresent(x -> app.pedidos().eliminar(pedidoId));
