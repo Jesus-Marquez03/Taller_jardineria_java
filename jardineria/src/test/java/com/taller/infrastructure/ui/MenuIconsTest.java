@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/** Comprueba que cada icono se pueda pintar dentro del tamaño esperado. */
 class MenuIconsTest {
     @Test
     void todosLosIconosTienenTamanoUniformeYPuedenDibujarse() {

@@ -27,6 +27,13 @@ import javax.swing.JTable;
 import javax.swing.SwingWorker;
 import javax.swing.table.DefaultTableModel;
 
+/**
+ * Pantalla inicial que presenta los indicadores del negocio.
+ *
+ * <p>Es un JPanel de infraestructura visual. Consulta {@link DashboardService},
+ * distribuye tarjetas con LayoutManagers, muestra una JTable de pedidos y
+ * dibuja un gráfico sencillo con Java 2D.</p>
+ */
 public class InicioPanel extends JPanel {
     private final DashboardService service;
     private final KpiCard ingresos = new KpiCard("Ingresos registrados", Theme.CORAL_CLARO);
@@ -44,6 +51,7 @@ public class InicioPanel extends JPanel {
     private final StatusChart chart = new StatusChart();
     private final JButton refresh = new JButton("Actualizar indicadores");
 
+    /** Recibe el caso de uso, arma la pantalla y carga los datos iniciales. */
     public InicioPanel(DashboardService service) {
         this.service = service;
         setLayout(new BorderLayout(14, 14));
@@ -87,6 +95,7 @@ public class InicioPanel extends JPanel {
         return header;
     }
 
+    /** Combina tarjetas, gráfico y tabla usando GridLayout, BorderLayout y JSplitPane. */
     private JPanel createBody() {
         JPanel kpis = new JPanel(new GridLayout(1, 5, 10, 0));
         kpis.setOpaque(false);
@@ -119,6 +128,10 @@ public class InicioPanel extends JPanel {
         return body;
     }
 
+    /**
+     * Usa SwingWorker para consultar MySQL sin congelar botones ni repintado.
+     * Desactiva temporalmente Actualizar para impedir solicitudes duplicadas.
+     */
     public void cargar() {
         refresh.setEnabled(false);
         refresh.setText("Actualizando...");
@@ -145,6 +158,7 @@ public class InicioPanel extends JPanel {
         }.execute();
     }
 
+    /** Copia el objeto de resumen a tarjetas, tabla y gráfico. */
     private void mostrar(DashboardData data) {
         NumberFormat number = NumberFormat.getNumberInstance();
         number.setMinimumFractionDigits(2);
@@ -177,6 +191,7 @@ public class InicioPanel extends JPanel {
         return panel;
     }
 
+    /** Tarjeta visual que agrupa nombre, valor grande y nota secundaria. */
     private static class KpiCard extends RoundedPanel {
         private final JLabel value = new JLabel("-");
         private final JLabel note = new JLabel("Cargando...");
@@ -208,6 +223,7 @@ public class InicioPanel extends JPanel {
         }
     }
 
+    /** Dibuja barras proporcionales con Graphics2D sin una librería externa. */
     private static class StatusChart extends JPanel {
         private final Color[] barColors = {Theme.CORAL, Theme.MARRON, Theme.VERDE};
         private Map<String, Integer> data = new LinkedHashMap<>();
@@ -224,6 +240,7 @@ public class InicioPanel extends JPanel {
 
         @Override
         protected void paintComponent(Graphics graphics) {
+            // Swing entrega Graphics; se crea una copia Graphics2D para dibujar con suavizado.
             super.paintComponent(graphics);
             Graphics2D graphics2D = (Graphics2D) graphics.create();
             graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING,

@@ -3,6 +3,13 @@ package com.taller.domain.model;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+/**
+ * Representa un pago registrado para un cliente.
+ *
+ * <p>Su clave primaria es compuesta: código del cliente e identificador de
+ * transacción. {@link LocalDate} representa el día del pago y
+ * {@link BigDecimal} conserva el total monetario sin perder precisión.</p>
+ */
 public class Pago {
     private Integer codigoCliente;
     private String formaPago;
@@ -10,6 +17,7 @@ public class Pago {
     private LocalDate fechaPago;
     private BigDecimal total;
 
+    /** Crea un pago y valida identificadores, fecha, forma de pago y total. */
     public Pago(Integer codigoCliente, String formaPago, String idTransaccion, LocalDate fechaPago, BigDecimal total) {
         setCodigoCliente(codigoCliente);
         setFormaPago(formaPago);
@@ -18,6 +26,10 @@ public class Pago {
         setTotal(total);
     }
 
+    /**
+     * Une las dos columnas que identifican de manera única el pago.
+     * @return clave compuesta inmutable
+     */
     public PagoId getId() { return new PagoId(codigoCliente, idTransaccion); }
     public Integer getCodigoCliente() { return codigoCliente; }
     public void setCodigoCliente(Integer codigoCliente) { this.codigoCliente = Validaciones.enteroPositivo(codigoCliente == null ? 0 : codigoCliente, "El codigo del cliente"); }

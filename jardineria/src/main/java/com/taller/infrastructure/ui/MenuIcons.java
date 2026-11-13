@@ -12,8 +12,14 @@ import java.awt.geom.Path2D;
 import java.awt.geom.RoundRectangle2D;
 import javax.swing.Icon;
 
-/** Íconos pequeños dibujados con Java 2D para el menú lateral. */
+/**
+ * Fábrica de íconos pequeños dibujados con Java 2D para el menú lateral.
+ *
+ * <p>No usa PNG ni librerías. Cada {@link Icon} mide 16×16 y toma el color del
+ * componente que lo pinta, por eso acompaña los estados del JButton.</p>
+ */
 final class MenuIcons {
+    /** Enumera los nueve dibujos disponibles sin usar textos sueltos. */
     enum Type {
         DASHBOARD, CLIENTES, PEDIDOS, DETALLES, PAGOS,
         PRODUCTOS, GAMAS, OFICINAS, EMPLEADOS
@@ -22,6 +28,7 @@ final class MenuIcons {
     private MenuIcons() {
     }
 
+    /** @return un Icon inmutable que sabe dibujar el tipo solicitado */
     static Icon create(Type type) {
         return new NavigationIcon(type);
     }
@@ -46,6 +53,7 @@ final class MenuIcons {
 
         @Override
         public void paintIcon(Component component, Graphics graphics, int x, int y) {
+            // Se copia Graphics2D para no alterar la configuración usada por Swing.
             Graphics2D g = (Graphics2D) graphics.create();
             try {
                 g.translate(x, y);

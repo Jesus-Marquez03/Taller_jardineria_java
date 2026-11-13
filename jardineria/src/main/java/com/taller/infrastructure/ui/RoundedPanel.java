@@ -6,7 +6,10 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import javax.swing.JPanel;
 
-/** Panel con esquinas suaves para tarjetas y secciones del Dashboard. */
+/**
+ * JPanel que pinta fondo y borde con esquinas redondeadas usando Java 2D.
+ * Se reutiliza en tarjetas y secciones sin cambiar su comportamiento de panel.
+ */
 class RoundedPanel extends JPanel {
     private final Color backgroundColor;
     private final Color borderColor;
@@ -25,6 +28,7 @@ class RoundedPanel extends JPanel {
 
     @Override
     protected void paintComponent(Graphics graphics) {
+        // El fondo se dibuja manualmente porque setOpaque(false) evita el rectángulo normal.
         Graphics2D graphics2D = (Graphics2D) graphics.create();
         graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         graphics2D.setColor(backgroundColor);

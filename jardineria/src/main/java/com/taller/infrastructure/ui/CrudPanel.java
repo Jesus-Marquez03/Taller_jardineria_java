@@ -24,6 +24,14 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
+/**
+ * Panel Swing reutilizable para listar, buscar, crear, editar y eliminar entidades.
+ *
+ * <p>{@code T} representa cualquiera de las ocho entidades. En vez de escribir
+ * ocho paneles casi iguales, el constructor recibe funciones que indican cómo
+ * listar, abrir formularios, guardar y convertir una entidad en fila. JTable
+ * muestra los datos y JScrollPane permite desplazarlos.</p>
+ */
 public class CrudPanel<T> extends JPanel {
     private final Supplier<List<T>> listar;
     private final Supplier<T> crearFormulario;
@@ -39,6 +47,11 @@ public class CrudPanel<T> extends JPanel {
     private final JButton refreshButton = new JButton("Actualizar lista");
     private List<T> registros = new ArrayList<>();
 
+    /**
+     * Recibe el título, columnas y operaciones específicas de cada entidad.
+     * Supplier produce datos sin parámetros; Consumer recibe una entidad y
+     * Function transforma un valor en otro.
+     */
     public CrudPanel(String titulo, String[] columnas, Supplier<List<T>> listar,
                      Supplier<T> crearFormulario, Function<T, T> editarFormulario,
                      Consumer<T> guardar, Consumer<T> actualizar, Consumer<T> eliminar,
@@ -74,6 +87,7 @@ public class CrudPanel<T> extends JPanel {
         cargar();
     }
 
+    /** Crea el título y un campo cuyo DocumentListener filtra mientras se escribe. */
     private JPanel createHeader(String title) {
         JLabel heading = new JLabel(title);
         heading.setFont(Theme.TITULO);
@@ -121,6 +135,10 @@ public class CrudPanel<T> extends JPanel {
         return card;
     }
 
+    /**
+     * Crea botones y ActionListener. Cada listener obtiene el formulario o la
+     * selección y luego llama a la función recibida por el constructor.
+     */
     private JPanel createActions() {
         JButton newButton = new JButton("Nuevo");
         JButton editButton = new JButton("Editar");
@@ -174,6 +192,10 @@ public class CrudPanel<T> extends JPanel {
         return actions;
     }
 
+    /**
+     * Consulta los registros fuera del EDT mediante SwingWorker.
+     * {@code done()} actualiza modelo y etiquetas cuando termina la consulta.
+     */
     public void cargar() {
         setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         refreshButton.setEnabled(false);
@@ -203,6 +225,7 @@ public class CrudPanel<T> extends JPanel {
         }.execute();
     }
 
+    /** Ejecuta una operación CRUD, muestra resultado y recarga la tabla. */
     private void ejecutar(Runnable task, String message) {
         try {
             task.run();
@@ -214,6 +237,10 @@ public class CrudPanel<T> extends JPanel {
         }
     }
 
+    /**
+     * Convierte el índice visual (posiblemente ordenado) al índice del modelo.
+     * @return entidad seleccionada o {@code null} si no se eligió una fila
+     */
     private T seleccionado() {
         int viewRow = tabla.getSelectedRow();
         if (viewRow < 0) {
@@ -224,11 +251,13 @@ public class CrudPanel<T> extends JPanel {
         return registros.get(tabla.convertRowIndexToModel(viewRow));
     }
 
+    /** Aplica una expresión segura e insensible a mayúsculas a todas las columnas. */
     private void filtrar(String text) {
         ordenador.setRowFilter(text.isBlank() ? null
                 : RowFilter.regexFilter("(?i)" + Pattern.quote(text)));
     }
 
+    /** Extrae la causa de SwingWorker y presenta un mensaje legible. */
     private void mostrarError(Exception exception) {
         Throwable cause = exception instanceof java.util.concurrent.ExecutionException
                 && exception.getCause() != null ? exception.getCause() : exception;

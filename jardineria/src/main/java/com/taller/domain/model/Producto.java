@@ -2,6 +2,14 @@ package com.taller.domain.model;
 
 import java.math.BigDecimal;
 
+/**
+ * Representa un producto vendido por la jardinería y sus existencias.
+ *
+ * <p>Pertenece a la capa de dominio. Se relaciona con una
+ * {@link GamaProducto} mediante el atributo {@code gama}. El stock se guarda
+ * como entero y los precios como {@link BigDecimal}, el tipo apropiado para
+ * dinero. La clase solo protege y valida sus datos; no ejecuta SQL.</p>
+ */
 public class Producto {
     private String codigoProducto;
     private String nombre;
@@ -13,6 +21,10 @@ public class Producto {
     private BigDecimal precioVenta;
     private BigDecimal precioProveedor;
 
+    /**
+     * Construye un producto. Utiliza setters para impedir texto obligatorio
+     * vacío, stock negativo y precios negativos.
+     */
     public Producto(String codigoProducto, String nombre, String gama, String dimensiones, String proveedor,
                     String descripcion, int cantidadEnStock, BigDecimal precioVenta, BigDecimal precioProveedor) {
         setCodigoProducto(codigoProducto);

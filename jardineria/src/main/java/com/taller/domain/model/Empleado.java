@@ -1,5 +1,13 @@
 package com.taller.domain.model;
 
+/**
+ * Representa a una persona empleada por la empresa.
+ *
+ * <p>Pertenece al dominio y conserva las claves foráneas hacia una oficina y,
+ * opcionalmente, hacia otro empleado que actúa como jefe. El código del jefe,
+ * el segundo apellido y el puesto pueden ser {@code null}. El servicio valida
+ * que las referencias realmente existan antes de guardar.</p>
+ */
 public class Empleado {
     private Integer codigoEmpleado;
     private String nombre;
@@ -11,6 +19,7 @@ public class Empleado {
     private Integer codigoJefe;
     private String puesto;
 
+    /** Crea un empleado y valida mediante setters sus datos obligatorios. */
     public Empleado(Integer codigoEmpleado, String nombre, String apellido1, String apellido2,
                     String extension, String email, String codigoOficina, Integer codigoJefe, String puesto) {
         setCodigoEmpleado(codigoEmpleado);
